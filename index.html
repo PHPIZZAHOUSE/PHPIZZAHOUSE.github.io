@@ -1,3 +1,4 @@
+fullText:
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -68,8 +69,7 @@
     .card{background:linear-gradient(180deg, var(--panel2), var(--card));border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:10px;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;min-height:100%}
     .card:hover{transform:translateY(-4px);border-color:rgba(255,212,0,.28);box-shadow:0 18px 30px rgba(0,0,0,.28)}
     .thumb{position:relative;aspect-ratio:16/10;border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,.06)}
-    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .thumb .fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg, rgba(255,212,0,.10), rgba(255,255,255,.05));font-weight:800;text-align:center;padding:10px}
+    .thumb .fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg, rgba(255,212,0,.15), rgba(255,255,255,.08));font-weight:800;text-align:center;padding:10px; font-size: 16px;}
     .name{margin:0;font-size:18px;color:#fff;font-weight:900;line-height:1.15}
     .desc{margin:0;color:var(--muted);font-size:13px;line-height:1.45;min-height:38px}
     .price{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -171,46 +171,6 @@
   </div>
 
   <script>
-    const categoryImages = {
-      pizza: [
-        'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1601924638867-3ec2c2d9b7b3?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1506354666786-959d6d497f1a?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1601924928383-8f558ce7f2c8?auto=format&fit=crop&w=1200&q=80'
-      ],
-      burger: [
-        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1550317138-10000687a72b?auto=format&fit=crop&w=1200&q=80'
-      ],
-      side: [
-        'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=1200&q=80'
-      ],
-      salad: [
-        'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=80'
-      ],
-      dessert: [
-        'https://images.unsplash.com/photo-1602253057113-70e5b3f7e9e1?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1470324161839-ce2bb6fa6bc3?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=1200&q=80'
-      ],
-      sauce: [
-        'https://images.unsplash.com/photo-1606755962773-d324e1e8b5d2?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1510627498534-cf7e9002facc?auto=format&fit=crop&w=1200&q=80'
-      ]
-    };
-
     const products = [
       { category:'Yeşil Rota', kind:'pizza', items:[
         { id:'ege', name:{tr:'Ege Pizza', en:'Aegean Pizza', ru:'Эгейская пицца', ar:'بيتزا إيجه'}, desc:{tr:'Özel pizza sosu, mozzarella, tulum peyniri, kırmızı biber, yeşil zeytin, siyah zeytin, kekik', en:'Special sauce, mozzarella, tulum cheese, red pepper, green olives, black olives, oregano', ru:'Фирменный соус, моцарелла, сыр тулум, красный перец, зелёные и чёрные оливки, орегано', ar:'صلصة خاصة، موزاريلا، جبنة تولوم، فلفل أحمر، زيتون أخضر وأسود، زعتر'}, prices:{M:275,L:365,XL:555} },
@@ -260,7 +220,7 @@
         { id:'eb2', name:{tr:'Cheeseburger Menü', en:'Cheeseburger Meal', ru:'Чизбургер набор', ar:'وجبة تشيز برجر'}, price:385 },
         { id:'eb3', name:{tr:'Duble Burger Menü', en:'Double Burger Meal', ru:'Двойной бургер', ar:'وجبة دبل برجر'}, price:470 },
         { id:'eb4', name:{tr:'Duble Cheese Burger Menü', en:'Double Cheeseburger Meal', ru:'Двойной чизбургер', ar:'وجبة دبل تشيز برجر'}, price:515 },
-        { id:'eb5', name:{tr:'Triplex Burger Menü', en:'Triple Burger Meal', ru:'Тройной бургер', ar:'وجبة تريبل برجر'}, price:645 },
+        { id:'eb5', name:{tr:'Triplex Burger Menü', en:'Triple Burger Meal', ru:'Тройной برجر', ar:'وجبة تريبل برجر'}, price:645 },
         { id:'eb6', name:{tr:'Triplex Cheese Burger Menü', en:'Triple Cheeseburger Meal', ru:'Тройной чизбургер', ar:'وجبة تريبل تشيز برجر'}, price:690 },
         { id:'eb7', name:{tr:'Barbekü Burger Menü', en:'BBQ Burger Meal', ru:'Барбекю бургер набор', ar:'وجبة برجر باربكيو'}, price:385 },
         { id:'eb8', name:{tr:'Mantarlı Burger Menü', en:'Mushroom Burger Meal', ru:'Грибной бургер набор', ar:'وجبة برجر فطر'}, price:385 },
@@ -347,12 +307,6 @@
     function saveState(){ localStorage.setItem('pizza_house_cart', JSON.stringify(state.cart)); localStorage.setItem('pizza_house_sizes', JSON.stringify(state.selectedSizes)); }
     function findItem(id){ for(const cat of products){ const found = cat.items.find(i => i.id === id); if(found) return found; } return null; }
     function filteredProducts(){ const q = state.query.trim().toLowerCase(); if(!q) return products; return products.map(cat => ({...cat, items: cat.items.filter(item => getText(item.name).toLowerCase().includes(q) || getText(item.desc).toLowerCase().includes(q) || cat.category.toLowerCase().includes(q))})).filter(cat => cat.items.length); }
-    function imageFor(catKind, itemId){
-      const list = categoryImages[catKind] || categoryImages.side;
-      let idx = 0;
-      for (let i = 0; i < itemId.length; i++) idx = (idx + itemId.charCodeAt(i)) % list.length;
-      return list[idx];
-    }
 
     function render(){
       document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
@@ -374,7 +328,7 @@
             </div>
           </div>
           <div class="menu-grid">
-            ${cat.items.map(item => cardHTML(item, cat.kind)).join('')}
+            ${cat.items.map(item => cardHTML(item)).join('')}
           </div>
         </section>
       `).join('');
@@ -382,16 +336,14 @@
       bindCardEvents();
     }
 
-    function cardHTML(item, kind){
+    function cardHTML(item){
       const isPizza = !!item.prices;
       const selected = state.selectedSizes[item.id] || 'M';
-      const img = imageFor(kind, item.id);
       return `
         <article class="category">
           <div class="card">
             <div class="thumb">
-              <img src="${img}" alt="${getText(item.name)}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-              <div class="fallback" style="display:none">${getText(item.name)}</div>
+              <div class="fallback">${getText(item.name)}</div>
             </div>
             <h3 class="name">${getText(item.name)}</h3>
             <p class="desc">${getText(item.desc) || '&nbsp;'}</p>
@@ -497,31 +449,3 @@
   </script>
 </body>
 </html>
-const productImages = {
-  ege: "images/ege-pizza.jpg",
-  akdeniz: "images/akdeniz-pizza.jpg",
-  vejeteryan: "images/vejeteryan-pizza.jpg",
-  margarita: "images/margherita.jpg",
-  mantarli: "images/mantarli-pizza.jpg",
-  "kuru-domatesli": "images/pesto-pizza.jpg",
-  regina: "images/regina-pizza.jpg",
-
-  mix: "images/karisik-pizza.jpg",
-  meksikan: "images/meksikan-pizza.jpg",
-  sucuklu: "images/sucuklu-pizza.jpg",
-  sosisli: "images/sosisli-pizza.jpg",
-
-  special: "images/special-pizza.jpg",
-  ton: "images/ton-pizza.jpg",
-  tavuk: "images/tavuk-pizza.jpg",
-
-  "house-special": "images/house-special.jpg",
-
-  tb1: "images/tavuk-burger.jpg",
-  eb1: "images/hamburger.jpg",
-
-  ap7: "images/patates.jpg",
-
-  tat3: "images/kunefe.jpg",
-  tat4: "images/tiramisu.jpg"
-};
