@@ -543,5 +543,46 @@ fullText:
       alert("Hata: " + error.message);
     });
   }
-</script></body>
+</script><script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBIEz6FmnW2vxVAO-dZVvO0ggKI69MqWEA",
+    authDomain: "pizzahouse-d574e.firebaseapp.com",
+    databaseURL: "https://pizzahouse-d574e-default-rtdb.firebaseio.com",
+    projectId: "pizzahouse-d574e",
+    storageBucket: "pizzahouse-d574e.firebasestorage.app",
+    messagingSenderId: "1002367445478",
+    appId: "1:1002367445478:web:74bb166abf9ee134468e27"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  // Global fonksiyon olarak tanımlıyoruz ki buton görebilsin
+  window.siparisVer = function() {
+    console.log("Butona basıldı, Firebase'e gönderiliyor...");
+    const siparisRef = ref(database, 'siparisler');
+    
+    push(siparisRef, {
+      masa: "Masa 1",
+      urun: "Pizza Menüsü",
+      zaman: new Date().toLocaleString(),
+      durum: "Yeni"
+    })
+    .then(() => {
+      alert("Sipariş başarıyla düştü! 🍕");
+    })
+    .catch((error) => {
+      alert("Hata: " + error.message);
+    });
+  }
+</script>
+
+<div style="text-align:center; padding:20px;">
+  <button onclick="window.siparisVer()" style="padding:15px 30px; background:#e91e63; color:white; border-radius:10px; border:none; cursor:pointer; font-weight:bold;">
+    Siparişi Firebase'e Gönder
+  </button>
+</div></body>
 </html>
