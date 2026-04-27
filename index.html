@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pizza House | Dijital Menü</title>
+  <style>
+    :root{
+      --bg:#0b0b10;
+      --panel:#13131b;
+      --panel2:#1a1a24;
+      --card:#20202b;
+      --text:#f5f5f5;
+      --muted:#b6b6c8;
+      --accent:#ffd400;
+      --green:#61d17d;
+      --purple:#7c2cff;
+      --pink:#ff4f88;
+      --shadow:0 14px 32px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+      radial-gradient(circle at top left, rgba(255,212,0,.10), transparent 22%),
+      radial-gradient(circle at bottom right, rgba(255,212,0,.06), transparent 18%),
+      var(--bg);color:var(--text)}
+    body{padding-bottom:130px;overflow-x:hidden}
+    .wrap{max-width:1400px;margin:0 auto;padding:18px 16px 36px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+    .brand{display:flex;flex-direction:column;gap:6px}
+    .brand h1{margin:0;font-size:30px;line-height:1;color:var(--accent);letter-spacing:.3px}
+    .brand p{margin:0;color:var(--muted);font-size:14px}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.22);color:var(--accent);font-weight:800;box-shadow:var(--shadow)}
+    .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .select,.btn{appearance:none;border:none;outline:none;border-radius:14px;font-weight:800}
+    .select{background:#fff;color:#111;padding:10px 12px;box-shadow:var(--shadow);cursor:pointer}
+    .btn{cursor:pointer;transition:.18s transform ease,.18s opacity ease}
+    .btn:active{transform:scale(.98)}
+    .hero{position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(180deg, rgba(255,212,0,.08), rgba(255,255,255,0));border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow);padding:18px;margin-bottom:18px}
+    .hero-grid{display:grid;grid-template-columns:1.4fr .9fr;gap:16px;align-items:stretch}
+    .hero-main{min-height:260px;border-radius:24px;background:
+      linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.35)),
+      url('https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+      position:relative;overflow:hidden}
+    .hero-main::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, transparent 30%, rgba(0,0,0,.55) 100%)}
+    .hero-card{position:absolute;left:18px;bottom:18px;z-index:2;background:rgba(10,10,16,.72);backdrop-filter:blur(8px);padding:16px 18px;border-radius:18px;border:1px solid rgba(255,255,255,.10);max-width:70%}
+    .hero-card h2{margin:0 0 6px;font-size:28px;line-height:1.1;color:#fff}
+    .hero-card p{margin:0;color:#f1f1f1;font-size:14px;line-height:1.5}
+    .hero-side{display:grid;grid-template-rows:1fr 1fr;gap:16px}
+    .promo{border-radius:24px;background:linear-gradient(145deg, #181825, #101018);padding:18px;border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative}
+    .promo h3{margin:0 0 8px;font-size:22px;color:var(--accent)}
+    .promo p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+    .promo .badge{display:inline-flex;align-self:flex-start;margin-top:12px;padding:7px 11px;border-radius:999px;background:rgba(255,212,0,.12);border:1px solid rgba(255,212,0,.22);color:var(--accent);font-size:12px;font-weight:800}
+    .promo.photo{background:
+      linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.30)),
+      url('https://images.unsplash.com/photo-1550317138-10000687a72b?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat}
+    .promo.photo h3,.promo.photo p{color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+    .promo.photo .badge{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.20)}
+    .section{margin-top:18px}
+    .section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .section-title{display:flex;align-items:center;gap:10px;margin:0;color:var(--accent);font-size:24px;font-weight:900;letter-spacing:.2px}
+    .section-title::before{content:"";width:6px;height:28px;border-radius:999px;background:var(--accent);display:inline-block}
+    .section-sub{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .menu-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:16px}
+    .category{border-radius:26px;background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);overflow:hidden;box-shadow:var(--shadow)}
+    .category-head{padding:16px 16px 10px;background:linear-gradient(135deg, rgba(255,212,0,.92), rgba(255,179,0,.92));color:#161616;font-weight:900;text-transform:uppercase;letter-spacing:.8px;font-size:16px}
+    .category-body{padding:14px;display:grid;gap:12px;background:linear-gradient(180deg, rgba(255,255,255,.03), transparent)}
+    .card{background:linear-gradient(180deg, var(--panel2), var(--card));border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:10px;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;min-height:100%}
+    .card:hover{transform:translateY(-4px);border-color:rgba(255,212,0,.28);box-shadow:0 18px 30px rgba(0,0,0,.28)}
+    .thumb{position:relative;aspect-ratio:16/10;border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,.06)}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .thumb .fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg, rgba(255,212,0,.10), rgba(255,255,255,.05));font-weight:800;text-align:center;padding:10px}
+    .name{margin:0;font-size:18px;color:#fff;font-weight:900;line-height:1.15}
+    .desc{margin:0;color:var(--muted);font-size:13px;line-height:1.45;min-height:38px}
+    .price{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .price .single{font-size:18px;font-weight:900;color:var(--accent)}
+    .sizes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .size-btn{border:none;border-radius:14px;padding:10px 8px;background:#ececec;color:#111;font-weight:900;cursor:pointer;box-shadow:inset 0 -2px 0 rgba(0,0,0,.12)}
+    .size-btn.active{background:linear-gradient(180deg, #ffdf3f, #ffbf00);color:#161616}
+    .add-btn{border:none;border-radius:14px;padding:12px 14px;background:linear-gradient(180deg, var(--green), #30b85a);color:#fff;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 10px 18px rgba(49,184,90,.22)}
+    .add-btn.alt{background:linear-gradient(180deg, #ffd54a, #f0b400);color:#171717;box-shadow:0 10px 18px rgba(240,180,0,.20)}
+    .cart-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;width:min(960px, calc(100% - 20px));background:linear-gradient(90deg, var(--purple), var(--pink));color:#fff;border-radius:24px;box-shadow:0 18px 32px rgba(124,44,255,.32);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;z-index:2000;border:1px solid rgba(255,255,255,.14)}
+    .cart-bar b{font-size:18px}
+    .cart-bar .meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .cart-count{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;border-radius:999px;background:#fff;color:var(--purple);font-weight:900;padding:0 8px}
+    .cart-panel{position:fixed;right:12px;top:12px;width:320px;max-height:calc(100vh - 24px);overflow:auto;background:rgba(10,10,15,.90);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:22px;box-shadow:var(--shadow);z-index:2500;padding:16px}
+    .cart-panel h3{margin:0 0 10px;color:var(--accent);font-size:20px}
+    .cart-total{font-weight:900;font-size:18px;margin:10px 0 14px}
+    .cart-items{display:grid;gap:10px}
+    .cart-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:10px}
+    .cart-item strong{display:block;font-size:14px;margin-bottom:4px}
+    .cart-item small{color:var(--muted)}
+    .qty{display:flex;align-items:center;gap:8px}
+    .qty button{width:28px;height:28px;border:none;border-radius:8px;background:#2b2b37;color:#fff;font-weight:900;cursor:pointer}
+    .empty{padding:18px;border:1px dashed rgba(255,255,255,.18);border-radius:16px;color:var(--muted);text-align:center;background:rgba(255,255,255,.02)}
+    .lang{position:fixed;top:14px;left:14px;z-index:2600;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.95);color:#111;border-radius:999px;padding:8px 10px;box-shadow:var(--shadow)}
+    .lang select{border:none;outline:none;background:transparent;font-weight:800;cursor:pointer}
+    .search-wrap{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:10px 12px;box-shadow:var(--shadow)}
+    .search-wrap input{background:transparent;border:none;outline:none;color:#fff;font-size:14px;min-width:220px}
+    .search-wrap input::placeholder{color:#9f9fb2}
+    @media (max-width: 1200px){.hero-grid{grid-template-columns:1fr}.hero-card{max-width:100%}.cart-panel{position:static;width:auto;max-height:none;margin:16px 0 0}.cart-bar{bottom:10px}}
+    @media (max-width: 720px){.wrap{padding:14px 12px 30px}.brand h1{font-size:24px}.hero{padding:12px}.hero-main{min-height:220px}.hero-card h2{font-size:22px}.menu-grid{grid-template-columns:1fr}.search-wrap{width:100%}.search-wrap input{min-width:0;width:100%}.cart-bar{width:calc(100% - 16px);padding:12px 14px;border-radius:18px}.cart-bar b{font-size:16px}}
+  </style>
+</head>
+<body>
+  <div class="lang">
+    <span>🌐</span>
+    <select id="langSelect">
+      <option value="tr">TR</option>
+      <option value="en">EN</option>
+      <option value="ru">RU</option>
+      <option value="ar">AR</option>
+    </select>
+  </div>
+
+  <div class="cart-panel" id="cartPanel">
+    <h3 id="cartTitle">🛒 Sepet</h3>
+    <div class="cart-total"><span id="cartTotalLabel">Toplam:</span> <span id="cartTotal">0 ₺</span></div>
+    <div class="cart-items" id="cartItems"></div>
+    <button class="btn add-btn alt" id="clearCartBtn" style="width:100%;margin-top:12px;">Sepeti Temizle</button>
+  </div>
+
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <h1>🍕 Pizza House</h1>
+        <p id="subtitle">Serik · Antalya · Dijital Menü</p>
+      </div>
+      <div class="controls">
+        <div class="pill" id="tablePill">Masa: -</div>
+        <div class="search-wrap">
+          <span>🔎</span>
+          <input id="searchInput" type="text" placeholder="Ürün ara..." />
+        </div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="hero-grid">
+        <div class="hero-main">
+          <div class="hero-card">
+            <h2>Görselli, hızlı ve masa bazlı sipariş</h2>
+            <p>Pizza, burger, aperatif, tatlı ve sos kategorileri tek ekranda. M / L / XL boy seçimi, sepet ve çoklu dil hazır.</p>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="promo">
+            <div>
+              <h3>Hızlı Sipariş</h3>
+              <p>Ürünleri seç, boyu belirle, sepete ekle.</p>
+            </div>
+            <span class="badge">Masa: QR ile açılır</span>
+          </div>
+          <div class="promo photo">
+            <div>
+              <h3>Premium Menü Tasarımı</h3>
+              <p>Net görünüm, mobil uyum ve restoran hissi.</p>
+            </div>
+            <span class="badge">Netlify uyumlu</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="menuRoot"></div>
+  </div>
+
+  <div class="cart-bar" id="cartBar">
+    <div class="meta"><span class="cart-count" id="cartCount">0</span><b id="checkoutText">Siparişi Tamamla</b></div>
+    <div><span id="barTotal">0 ₺</span></div>
+  </div>
+
+  <script>
+    const categoryImages = {
+      pizza: [
+        'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1601924638867-3ec2c2d9b7b3?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1506354666786-959d6d497f1a?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1601924928383-8f558ce7f2c8?auto=format&fit=crop&w=1200&q=80'
+      ],
+      burger: [
+        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1550317138-10000687a72b?auto=format&fit=crop&w=1200&q=80'
+      ],
+      side: [
+        'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=1200&q=80'
+      ],
+      salad: [
+        'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=80'
+      ],
+      dessert: [
+        'https://images.unsplash.com/photo-1602253057113-70e5b3f7e9e1?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1470324161839-ce2bb6fa6bc3?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=1200&q=80'
+      ],
+      sauce: [
+        'https://images.unsplash.com/photo-1606755962773-d324e1e8b5d2?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1510627498534-cf7e9002facc?auto=format&fit=crop&w=1200&q=80'
+      ]
+    };
+
+    const products = [
+      { category:'Yeşil Rota', kind:'pizza', items:[
+        { id:'ege', name:{tr:'Ege Pizza', en:'Aegean Pizza', ru:'Эгейская пицца', ar:'بيتزا إيجه'}, desc:{tr:'Özel pizza sosu, mozzarella, tulum peyniri, kırmızı biber, yeşil zeytin, siyah zeytin, kekik', en:'Special sauce, mozzarella, tulum cheese, red pepper, green olives, black olives, oregano', ru:'Фирменный соус, моцарелла, сыр тулум, красный перец, зелёные и чёрные оливки, орегано', ar:'صلصة خاصة، موزاريلا، جبنة تولوم، فلفل أحمر، زيتون أخضر وأسود، زعتر'}, prices:{M:275,L:365,XL:555} },
+        { id:'akdeniz', name:{tr:'Akdeniz Pizza', en:'Mediterranean Pizza', ru:'Средиземноморская пицца', ar:'بيتزا متوسطية'}, desc:{tr:'Özel pizza sosu, mozzarella, siyah zeytin, beyaz peynir, domates, maydanoz, zeytinyağı', en:'Special sauce, mozzarella, black olives, feta cheese, tomato, parsley, olive oil', ru:'Фирменный соус, моцарелла, чёрные оливки, брынза, помидор, петрушка, оливковое масло', ar:'صلصة خاصة، موزاريلا، زيتون أسود، جبنة بيضاء، طماطم، بقدونس، زيت زيتون'}, prices:{M:275,L:365,XL:555} },
+        { id:'vejeteryan', name:{tr:'Vejeteryan Pizza', en:'Vegetarian Pizza', ru:'Вегетарианская пицца', ar:'بيتزا نباتية'}, desc:{tr:'Özel pizza sosu, mozzarella, yeşil zeytin, siyah zeytin, mantar, mısır, soğan', en:'Special sauce, mozzarella, green olives, black olives, mushroom, corn, onion', ru:'Фирменный соус, моцарелла, зелёные и чёрные оливки, грибы, кукуруза, лук', ar:'صلصة خاصة، موزاريلا، زيتون أخضر وأسود، فطر، ذرة، بصل'}, prices:{M:275,L:365,XL:555} },
+        { id:'margarita', name:{tr:'Margherita', en:'Margherita', ru:'Маргарита', ar:'مارغريتا'}, desc:{tr:'Özel pizza sosu, mozzarella, domates', en:'Special sauce, mozzarella, tomato', ru:'Фирменный соус, моцарелла, помидор', ar:'صلصة خاصة، موزاريلا، طماطم'}, prices:{M:275,L:365,XL:555} },
+        { id:'mantarli', name:{tr:'Mantarlı Pizza', en:'Mushroom Pizza', ru:'Грибная пицца', ar:'بيتزا فطر'}, desc:{tr:'Özel pizza sosu, mozzarella, mantar', en:'Special sauce, mozzarella, mushroom', ru:'Фирменный соус, моцарелла, грибы', ar:'صلصة خاصة، موزاريلا، فطر'}, prices:{M:275,L:365,XL:555} },
+        { id:'kuru-domatesli', name:{tr:'Kuru Domatesli Pesto Pizza', en:'Sun-Dried Tomato Pesto Pizza', ru:'Пицца с песто и вялеными томатами', ar:'بيتزا بيستو وطماطم مجففة'}, desc:{tr:'Özel pizza sosu, mozzarella, beyaz peynir, kuru domates, pesto sos', en:'Special sauce, mozzarella, feta cheese, sun-dried tomato, pesto sauce', ru:'Фирменный соус, моцарелла, брынза, вяленые томаты, соус песто', ar:'صلصة خاصة، موزاريلا، جبنة بيضاء، طماطم مجففة، صلصة بيستو'}, prices:{M:275,L:365,XL:555} },
+        { id:'regina', name:{tr:'Pizza Regina', en:'Pizza Regina', ru:'Пицца Регина', ar:'بيتزا ريجينا'}, desc:{tr:'Özel pizza sosu, mozzarella, dana jambon, mantar, kekik', en:'Special sauce, mozzarella, beef ham, mushroom, oregano', ru:'Фирменный соус, моцарелла, говяжья ветчина, грибы, орегано', ar:'صلصة خاصة، موزاريلا، لحم بقري مدخن، فطر، زعتر'}, prices:{M:275,L:365,XL:555} }
+      ]},
+      { category:'Zamansız Lezzetler', kind:'pizza', items:[
+        { id:'mix', name:{tr:'Mix Pizza', en:'Mixed Pizza', ru:'Микс пицца', ar:'بيتزا مشكلة'}, desc:{tr:'Özel pizza sosu, mozzarella, sucuk, salam, sosis, yeşil biber, mantar', en:'Special sauce, mozzarella, sausage, salami, hot dog, green pepper, mushroom', ru:'Фирменный соус, моцарелла, колбаса, салями, сосиски, зелёный перец, грибы', ar:'صلصة خاصة، موزاريلا، سجق، سلامي، نقانق، فلفل أخضر، فطر'}, prices:{M:305,L:385,XL:585} },
+        { id:'meksikan', name:{tr:'Meksikan Pizza', en:'Mexican Pizza', ru:'Мексиканская пицца', ar:'بيتزا مكسيكية'}, desc:{tr:'Özel pizza sosu, mozzarella, sucuk, mantar, kırmızı biber, jalapeno biber', en:'Special sauce, mozzarella, sausage, mushroom, red pepper, jalapeno', ru:'Фирменный соус, моцарелла, колбаса, грибы, красный перец, халапеньо', ar:'صلصة خاصة، موزاريلا، سجق، فطر، فلفل أحمر، هالابينو'}, prices:{M:305,L:385,XL:585} },
+        { id:'sucuklu', name:{tr:'Sucuklu Pizza', en:'Sausage Pizza', ru:'Пицца с колбасой', ar:'بيتزا سجق'}, desc:{tr:'Özel pizza sosu, mozzarella, sucuk', en:'Special sauce, mozzarella, sausage', ru:'Фирменный соус, моцарелла, колбаса', ar:'صلصة خاصة، موزاريلا، سجق'}, prices:{M:305,L:385,XL:585} },
+        { id:'sosisli', name:{tr:'Sosisli Pizza', en:'Hot Dog Pizza', ru:'Пицца с сосисками', ar:'بيتزا نقانق'}, desc:{tr:'Özel pizza sosu, mozzarella, sosis, mantar', en:'Special sauce, mozzarella, hot dog, mushroom', ru:'Фирменный соус, моцарелла, сосиски, грибы', ar:'صلصة خاصة، موزاريلا، نقانق، فطر'}, prices:{M:305,L:385,XL:585} },
+        { id:'double-mozz', name:{tr:'Duble Mozarella', en:'Double Mozzarella', ru:'Двойная моцарелла', ar:'دبل موزاريلا'}, desc:{tr:'Özel pizza sosu, çift kat mozzarella, salam, sosis, mantar', en:'Special sauce, double mozzarella, salami, sausage, mushroom', ru:'Фирменный соус, двойная моцарелла, салями, колбаса, грибы', ar:'صلصة خاصة، موزاريلا مضاعفة، سلامي، سجق، فطر'}, prices:{M:305,L:385,XL:585} }
+      ]},
+      { category:'Anadolu Pizzalar', kind:'pizza', items:[
+        { id:'special', name:{tr:'Special Pizza', en:'Special Pizza', ru:'Спешл пицца', ar:'بيتزا سبيشال'}, desc:{tr:'Özel pizza sosu, mozzarella, sucuk, salam, sosis, mantar, siyah zeytin, mısır', en:'Special sauce, mozzarella, sausage, salami, hot dog, mushroom, black olives, corn', ru:'Фирменный соус, моцарелла, колбаса, салями, сосиски, грибы, чёрные оливки, кукуруза', ar:'صلصة خاصة، موزاريلا، سجق، سلامي، نقانق، فطر، زيتون أسود، ذرة'}, prices:{M:315,L:395,XL:595} },
+        { id:'ton', name:{tr:'Ton Balıklı Pizza', en:'Tuna Pizza', ru:'Пицца с тунцом', ar:'بيتزا تونة'}, desc:{tr:'Özel pizza sosu, pizza peynir, ton balığı, soğan, kırmızı biber, sarımsak', en:'Special sauce, pizza cheese, tuna, onion, red pepper, garlic', ru:'Фирменный соус, пицца-сыр, тунец, лук, красный перец, чеснок', ar:'صلصة خاصة، جبنة بيتزا، تونة، بصل، فلفل أحمر، ثوم'}, prices:{M:315,L:395,XL:595} },
+        { id:'tavuk', name:{tr:'Tavuklu Pizza', en:'Chicken Pizza', ru:'Пицца с курицей', ar:'بيتزا دجاج'}, desc:{tr:'Özel pizza sosu, mozzarella, çıtır tavuk, yeşil zeytin, domates', en:'Special sauce, mozzarella, crispy chicken, green olives, tomato', ru:'Фирменный соус, моцарелла, хрустящая курица, зелёные оливки, помидор', ar:'صلصة خاصة، موزاريلا، دجاج مقرمش، زيتون أخضر، طماطم'}, prices:{M:315,L:395,XL:595} },
+        { id:'tavuk-mantar', name:{tr:'Tavuklu Mantarlı Pizza', en:'Chicken & Mushroom Pizza', ru:'Курица и грибы', ar:'بيتزا دجاج وفطر'}, desc:{tr:'Özel pizza sosu, mozzarella, çıtır tavuk, mantar', en:'Special sauce, mozzarella, crispy chicken, mushroom', ru:'Фирменный соус, моцарелла, хрустящая курица, грибы', ar:'صلصة خاصة، موزاريلا، دجاج مقرمش، فطر'}, prices:{M:315,L:395,XL:595} },
+        { id:'sucuk-yumurta', name:{tr:'Sucuklu Yumurtalı Pizza', en:'Sausage & Egg Pizza', ru:'С колбасой и яйцом', ar:'بيتزا سجق وبيض'}, desc:{tr:'Özel pizza sosu, mozzarella, sucuk, yumurta', en:'Special sauce, mozzarella, sausage, egg', ru:'Фирменный соус, моцарелла, колбаса, яйцо', ar:'صلصة خاصة، موزاريلا، سجق، بيض'}, prices:{M:315,L:395,XL:595} },
+        { id:'dort-peynir', name:{tr:'Dört Peynirli Pizza', en:'Four Cheese Pizza', ru:'Четыре сыра', ar:'أربعة أجبان'}, desc:{tr:'Özel pizza sosu, mozzarella, cheddar, rokfor, gouda', en:'Special sauce, mozzarella, cheddar, roquefort, gouda', ru:'Фирменный соус, моцарелла, чеддер, рокфор, гауда', ar:'صلصة خاصة، موزاريلا، شيدر، روكفور، جودة'}, prices:{M:315,L:395,XL:595} },
+        { id:'hawai', name:{tr:'Hawai Pizza', en:'Hawaiian Pizza', ru:'Гавайская пицца', ar:'بيتزا هاواي'}, desc:{tr:'Özel pizza sosu, mozzarella, ananas, çıtır tavuk', en:'Special sauce, mozzarella, pineapple, crispy chicken', ru:'Фирменный соус, моцарелла, ананас, хрустящая курица', ar:'صلصة خاصة، موزاريلا، أناناس، دجاج مقرمش'}, prices:{M:315,L:395,XL:595} }
+      ]},
+      { category:'Gurme Pizzalar', kind:'pizza', items:[
+        { id:'house-special', name:{tr:'Pizza House Special Pizza', en:'Pizza House Special Pizza', ru:'Спешл Pizza House', ar:'بيتزا بيتزا هاوس سبيشال'}, desc:{tr:'Özel pizza sosu, mozzarella, pastırma, kavurma, soğan, biber, sarımsak', en:'Special sauce, mozzarella, pastrami, roasted beef, onion, pepper, garlic', ru:'Фирменный соус, моцарелла, пастрома, жареная говядина, лук, перец, чеснок', ar:'صلصة خاصة، موزاريلا، بسطرمة، لحم محمر، بصل، فلفل، ثوم'}, prices:{M:395,L:485,XL:745} },
+        { id:'diyet', name:{tr:'Diyet Bozan Pizza', en:'Diet Breaker Pizza', ru:'Пицца-нарушитель диеты', ar:'بيتزا كاسرة الدايت'}, desc:{tr:'Özel pizza sosu, mozzarella, pastırma, et döner, soğan, köz biber, rokfor peyniri', en:'Special sauce, mozzarella, pastrami, doner meat, onion, roasted pepper, roquefort', ru:'Фирменный соус, моцарелла, пастрома, донер, лук, печёный перец, рокфор', ar:'صلصة خاصة، موزاريلا، بسطرمة، لحم دونر، بصل، فلفل مشوي، روكفور'}, prices:{M:395,L:485,XL:745} },
+        { id:'pastirmali', name:{tr:'Pastırmalı Pizza', en:'Pastrami Pizza', ru:'С пастромой', ar:'بيتزا بسطرمة'}, desc:{tr:'Özel pizza sosu, mozzarella, pastırma, sucuk, mantar, yeşil biber', en:'Special sauce, mozzarella, pastrami, sausage, mushroom, green pepper', ru:'Фирменный соус, моцарелла, пастрома, колбаса, грибы, зелёный перец', ar:'صلصة خاصة، موزاريلا، بسطرمة، سجق، فطر، فلفل أخضر'}, prices:{M:395,L:485,XL:745} },
+        { id:'kavurmali', name:{tr:'Kavurmalı Pizza', en:'Roasted Beef Pizza', ru:'Пицца с жареной говядиной', ar:'بيتزا كاورما'}, desc:{tr:'Özel pizza sosu, mozzarella, kavurma et, soğan, yeşil biber, domates', en:'Special sauce, mozzarella, roasted beef, onion, green pepper, tomato', ru:'Фирменный соус, моцарелла, жареная говядина, лук, зелёный перец, помидор', ar:'صلصة خاصة، موزاريلا، لحم كاورما، بصل، فلفل أخضر، طماطم'}, prices:{M:395,L:485,XL:745} }
+      ]},
+      { category:'Tavuk Burger Menü', kind:'burger', items:[
+        { id:'tb1', name:{tr:'Tavuk Burger Menü', en:'Chicken Burger Meal', ru:'Куриный бургер набор', ar:'وجبة برجر دجاج'}, price:245 },
+        { id:'tb2', name:{tr:'Tavuk Cheese Burger Menü', en:'Chicken Cheeseburger Meal', ru:'Куриный чизбургер набор', ar:'وجبة تشيز برجر دجاج'}, price:265 },
+        { id:'tb3', name:{tr:'Dublex Tavuk Burger Menü', en:'Double Chicken Burger Meal', ru:'Двойной куриный бургер', ar:'وجبة دبل برجر دجاج'}, price:295 },
+        { id:'tb4', name:{tr:'Dublex Tavuk Cheese Burger Menü', en:'Double Chicken Cheeseburger Meal', ru:'Двойной чизбургер с курицей', ar:'وجبة دبل تشيز برجر دجاج'}, price:335 },
+        { id:'tb5', name:{tr:'Triplex Tavuk Menü', en:'Triple Chicken Meal', ru:'Тройной куриный набор', ar:'وجبة تريبل دجاج'}, price:355 },
+        { id:'tb6', name:{tr:'Triplex Tavuk Cheese Burger Menü', en:'Triple Chicken Cheeseburger Meal', ru:'Тройной чизбургер с курицей', ar:'وجبة تريبل تشيز دجاج'}, price:385 },
+        { id:'tb7', name:{tr:'Fingers Burger Menü', en:'Fingers Burger Meal', ru:'Фингерс бургер набор', ar:'وجبة فينجرز برجر'}, price:265 },
+        { id:'tb8', name:{tr:'Barbekü Tavuk Burger Menü', en:'BBQ Chicken Burger Meal', ru:'Барбекю куриный бургер', ar:'وجبة دجاج باربكيو'}, price:265 },
+        { id:'tb9', name:{tr:'Mantarlı Tavuk Burger Menü', en:'Mushroom Chicken Burger Meal', ru:'Грибной куриный бургер', ar:'وجبة دجاج وفطر'}, price:265 },
+        { id:'tb10', name:{tr:'Meksikan Tavuk Burger Menü', en:'Mexican Chicken Burger Meal', ru:'Мексиканский куриный бургер', ar:'وجبة دجاج مكسيكي'}, price:265 }
+      ]},
+      { category:'Et Burger Menü', kind:'burger', items:[
+        { id:'eb1', name:{tr:'Hamburger Menü', en:'Hamburger Meal', ru:'Гамбургер набор', ar:'وجبة هامبرجر'}, price:365 },
+        { id:'eb2', name:{tr:'Cheeseburger Menü', en:'Cheeseburger Meal', ru:'Чизбургер набор', ar:'وجبة تشيز برجر'}, price:385 },
+        { id:'eb3', name:{tr:'Duble Burger Menü', en:'Double Burger Meal', ru:'Двойной бургер', ar:'وجبة دبل برجر'}, price:470 },
+        { id:'eb4', name:{tr:'Duble Cheese Burger Menü', en:'Double Cheeseburger Meal', ru:'Двойной чизбургер', ar:'وجبة دبل تشيز برجر'}, price:515 },
+        { id:'eb5', name:{tr:'Triplex Burger Menü', en:'Triple Burger Meal', ru:'Тройной бургер', ar:'وجبة تريبل برجر'}, price:645 },
+        { id:'eb6', name:{tr:'Triplex Cheese Burger Menü', en:'Triple Cheeseburger Meal', ru:'Тройной чизбургер', ar:'وجبة تريبل تشيز برجر'}, price:690 },
+        { id:'eb7', name:{tr:'Barbekü Burger Menü', en:'BBQ Burger Meal', ru:'Барбекю бургер набор', ar:'وجبة برجر باربكيو'}, price:385 },
+        { id:'eb8', name:{tr:'Mantarlı Burger Menü', en:'Mushroom Burger Meal', ru:'Грибной бургер набор', ar:'وجبة برجر فطر'}, price:385 },
+        { id:'eb9', name:{tr:'Meksikan Burger Menü', en:'Mexican Burger Meal', ru:'Мексиканский бургер набор', ar:'وجبة برجر مكسيكي'}, price:385 },
+        { id:'eb10', name:{tr:'Pizza House Special Burger Menü', en:'House Special Burger Meal', ru:'Спешл бургер набор', ar:'وجبة برجر سبيشال'}, price:425 }
+      ]},
+      { category:'Burger Menüleri', kind:'burger', items:[
+        { id:'bm1', name:{tr:"2'li Tavuk Burger Menü", en:'2 Chicken Burger Menu', ru:'2 куриных бургера', ar:'وجبة 2 برجر دجاج'}, price:465 },
+        { id:'bm2', name:{tr:"3'lü Tavuk Burger Menü", en:'3 Chicken Burger Menu', ru:'3 куриных бургера', ar:'وجبة 3 برجر دجاج'}, price:595 },
+        { id:'bm3', name:{tr:"2'li Hamburger Menü", en:'2 Hamburger Menu', ru:'2 гамбургера', ar:'وجبة 2 هامبرجر'}, price:555 },
+        { id:'bm4', name:{tr:"3'lü Hamburger Menü", en:'3 Hamburger Menu', ru:'3 гамбургера', ar:'وجبة 3 هامبرجر'}, price:805 },
+        { id:'bm5', name:{tr:'Mix Burger Menü', en:'Mix Burger Menu', ru:'Микс бургер меню', ar:'وجبة ميكس برجر'}, price:505 }
+      ]},
+      { category:'Aperatifler', kind:'side', items:[
+        { id:'ap1', name:{tr:"6'lı Nugget", en:'6 Nuggets', ru:'6 наггетсов', ar:'6 ناجت'}, price:85 },
+        { id:'ap2', name:{tr:"9'lu Nugget", en:'9 Nuggets', ru:'9 наггетсов', ar:'9 ناجت'}, price:125 },
+        { id:'ap3', name:{tr:"12'li Nugget", en:'12 Nuggets', ru:'12 наггетсов', ar:'12 ناجت'}, price:155 },
+        { id:'ap4', name:{tr:"6'lı Soğan Halkası", en:'6 Onion Rings', ru:'6 луковых колец', ar:'6 حلقات بصل'}, price:85 },
+        { id:'ap5', name:{tr:"9'lu Soğan Halkası", en:'9 Onion Rings', ru:'9 луковых колец', ar:'9 حلقات بصل'}, price:125 },
+        { id:'ap6', name:{tr:"12'li Soğan Halkası", en:'12 Onion Rings', ru:'12 луковых колец', ar:'12 حلقات بصل'}, price:155 },
+        { id:'ap7', name:{tr:'Patates Cipsi', en:'French Fries', ru:'Картофель фри', ar:'بطاطس مقلية'}, price:155 },
+        { id:'ap8', name:{tr:'Mozarella', en:'Mozzarella Sticks', ru:'Моцарелла', ar:'موزاريلا'}, price:85 },
+        { id:'ap9', name:{tr:'Fingers', en:'Fingers', ru:'Фингерс', ar:'فينجرز'}, price:185 },
+        { id:'ap10', name:{tr:"9'lu Çıtır Tavuk", en:'9 Crispy Chicken', ru:'9 хрустящих куриц', ar:'9 دجاج مقرمش'}, price:155 },
+        { id:'ap11', name:{tr:'Kemikli Çıtır Kanat', en:'Crispy Wings', ru:'Хрустящие крылья', ar:'أجنحة مقرمشة'}, price:160 },
+        { id:'ap12', name:{tr:'Pestolu Sarımsaklı Ekmek', en:'Pesto Garlic Bread', ru:'Чесночный хлеб с песто', ar:'خبز ثوم بالبيستو'}, price:125, desc:{tr:'Meze eşliğinde', en:'Served with appetizer', ru:'С закуской', ar:'مع مقبلات'} },
+        { id:'ap13', name:{tr:'Peynirli Sarımsaklı Ekmek', en:'Cheese Garlic Bread', ru:'Сырный чесночный хлеб', ar:'خبز ثوم بالجبنة'}, price:125, desc:{tr:'Meze eşliğinde', en:'Served with appetizer', ru:'С закуской', ar:'مع مقبلات'} },
+        { id:'ap14', name:{tr:'Pizza House Aperatif Tabağı', en:'Pizza House Snack Plate', ru:'Тарелка закусок Pizza House', ar:'طبق مقبلات بيتزا هاوس'}, price:325, desc:{tr:'3 adet nugget, 3 adet soğan halkası, 2 adet fingers, 2 adet kemikli kanat, 5 adet çıtır tavuk topu', en:'3 nuggets, 3 onion rings, 2 fingers, 2 wings, 5 crispy chicken balls', ru:'3 наггетса, 3 луковых кольца, 2 фингерса, 2 крыла, 5 хрустящих шариков', ar:'3 ناجت، 3 حلقات بصل، 2 فينجرز، 2 جناح، 5 كرات دجاج مقرمش'} }
+      ]},
+      { category:'Salatalar', kind:'salad', items:[
+        { id:'sal1', name:{tr:'Ton Balıklı Salata', en:'Tuna Salad', ru:'Салат с тунцом', ar:'سلطة تونة'}, price:235 },
+        { id:'sal2', name:{tr:'Sezar Salata', en:'Caesar Salad', ru:'Салат Цезарь', ar:'سلطة سيزر'}, price:235 },
+        { id:'sal3', name:{tr:'Akdeniz Salata', en:'Mediterranean Salad', ru:'Средиземноморский салат', ar:'سلطة متوسطية'}, price:205 },
+        { id:'sal4', name:{tr:'Roka Parmesan Salata', en:'Arugula Parmesan Salad', ru:'Салат рукола пармезан', ar:'سلطة جرجير بارميزان'}, price:215 }
+      ]},
+      { category:'Tatlılar', kind:'dessert', items:[
+        { id:'tat1', name:{tr:'Nutellalı Pizza', en:'Nutella Pizza', ru:'Пицца с Нутеллой', ar:'بيتزا نوتيلا'}, price:310 },
+        { id:'tat2', name:{tr:'Sufle', en:'Souffle', ru:'Суфле', ar:'سوفليه'}, price:220 },
+        { id:'tat3', name:{tr:'Künefe', en:'Kunefe', ru:'Кюнефе', ar:'كنافة'}, price:190 },
+        { id:'tat4', name:{tr:'Tiramisu', en:'Tiramisu', ru:'Тирамису', ar:'تيراميسو'}, price:180 },
+        { id:'tat5', name:{tr:'Magnolia', en:'Magnolia', ru:'Магнолия', ar:'ماغنوليا'}, price:180 }
+      ]},
+      { category:'Soslar', kind:'sauce', items:[
+        { id:'soz1', name:{tr:'Ketçap', en:'Ketchup', ru:'Кетчуп', ar:'كاتشب'}, price:15 },
+        { id:'soz2', name:{tr:'Mayonez', en:'Mayonnaise', ru:'Майонез', ar:'مايونيز'}, price:15 },
+        { id:'soz3', name:{tr:'Sarımsaklı Sos', en:'Garlic Sauce', ru:'Чесночный соус', ar:'صلصة الثوم'}, price:15 },
+        { id:'soz4', name:{tr:'Barbekü Sos', en:'BBQ Sauce', ru:'Соус барбекю', ar:'صلصة باربكيو'}, price:15 },
+        { id:'soz5', name:{tr:'Acı Sos', en:'Hot Sauce', ru:'Острый соус', ar:'صلصة حارة'}, price:15 },
+        { id:'soz6', name:{tr:'Ranch Sos', en:'Ranch Sauce', ru:'Ранч соус', ar:'صلصة رانش'}, price:15 },
+        { id:'soz7', name:{tr:'Ballı Hardallı Sos', en:'Honey Mustard Sauce', ru:'Медово-горчичный соус', ar:'صلصة عسل وخردل'}, price:15 }
+      ]}
+    ];
+
+    const state = {
+      lang: 'tr',
+      query: '',
+      cart: JSON.parse(localStorage.getItem('pizza_house_cart') || '{}'),
+      selectedSizes: JSON.parse(localStorage.getItem('pizza_house_sizes') || '{}')
+    };
+
+    const i18n = {
+      tr:{ subtitle:'Serik · Antalya · Dijital Menü', search:'Ürün ara...', cart:'Sepet', total:'Toplam', clear:'Sepeti Temizle', add:'Sepete Ekle', order:'Siparişi Tamamla', table:'Masa', empty:'Sepet boş', removed:'Sil', sent:'Siparişiniz alındı', categoryNote:'Boy seçimi sadece pizzalarda aktif.' },
+      en:{ subtitle:'Serik · Antalya · Digital Menu', search:'Search products...', cart:'Cart', total:'Total', clear:'Clear Cart', add:'Add to Cart', order:'Complete Order', table:'Table', empty:'Cart is empty', removed:'Remove', sent:'Your order has been received', categoryNote:'Size selection only for pizzas.' },
+      ru:{ subtitle:'Серик · Анталья · Цифровое меню', search:'Поиск товара...', cart:'Корзина', total:'Итого', clear:'Очистить корзину', add:'Добавить в корзину', order:'Оформить заказ', table:'Стол', empty:'Корзина пуста', removed:'Удалить', sent:'Ваш заказ принят', categoryNote:'Выбор размера только для пиццы.' },
+      ar:{ subtitle:'سيريك · أنطاليا · قائمة رقمية', search:'ابحث عن منتج...', cart:'السلة', total:'الإجمالي', clear:'تفريغ السلة', add:'أضف إلى السلة', order:'إتمام الطلب', table:'طاولة', empty:'السلة فارغة', removed:'حذف', sent:'تم استلام طلبك', categoryNote:'اختيار المقاس متاح فقط لطلبات البيتزا.' }
+    };
+
+    const tableNum = new URLSearchParams(location.search).get('masa') || '-';
+    const menuRoot = document.getElementById('menuRoot');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    const barTotal = document.getElementById('barTotal');
+    const cartCount = document.getElementById('cartCount');
+    const cartTitle = document.getElementById('cartTitle');
+    const cartTotalLabel = document.getElementById('cartTotalLabel');
+    const checkoutText = document.getElementById('checkoutText');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+    const subtitle = document.getElementById('subtitle');
+    const tablePill = document.getElementById('tablePill');
+    const searchInput = document.getElementById('searchInput');
+
+    function getText(obj){ return obj?.[state.lang] || obj?.tr || ''; }
+    function formatPrice(n){ return new Intl.NumberFormat('tr-TR').format(n) + ' ₺'; }
+    function saveState(){ localStorage.setItem('pizza_house_cart', JSON.stringify(state.cart)); localStorage.setItem('pizza_house_sizes', JSON.stringify(state.selectedSizes)); }
+    function findItem(id){ for(const cat of products){ const found = cat.items.find(i => i.id === id); if(found) return found; } return null; }
+    function filteredProducts(){ const q = state.query.trim().toLowerCase(); if(!q) return products; return products.map(cat => ({...cat, items: cat.items.filter(item => getText(item.name).toLowerCase().includes(q) || getText(item.desc).toLowerCase().includes(q) || cat.category.toLowerCase().includes(q))})).filter(cat => cat.items.length); }
+    function imageFor(catKind, itemId){
+      const list = categoryImages[catKind] || categoryImages.side;
+      let idx = 0;
+      for (let i = 0; i < itemId.length; i++) idx = (idx + itemId.charCodeAt(i)) % list.length;
+      return list[idx];
+    }
+
+    function render(){
+      document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+      subtitle.textContent = i18n[state.lang].subtitle;
+      searchInput.placeholder = i18n[state.lang].search;
+      tablePill.textContent = `${i18n[state.lang].table}: ${tableNum}`;
+      clearCartBtn.textContent = i18n[state.lang].clear;
+      cartTitle.textContent = `🛒 ${i18n[state.lang].cart}`;
+      cartTotalLabel.textContent = `${i18n[state.lang].total}:`;
+      checkoutText.textContent = i18n[state.lang].order;
+
+      const data = filteredProducts();
+      menuRoot.innerHTML = data.map(cat => `
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">${cat.category}</h2>
+              <p class="section-sub">${i18n[state.lang].categoryNote}</p>
+            </div>
+          </div>
+          <div class="menu-grid">
+            ${cat.items.map(item => cardHTML(item, cat.kind)).join('')}
+          </div>
+        </section>
+      `).join('');
+      renderCart();
+      bindCardEvents();
+    }
+
+    function cardHTML(item, kind){
+      const isPizza = !!item.prices;
+      const selected = state.selectedSizes[item.id] || 'M';
+      const img = imageFor(kind, item.id);
+      return `
+        <article class="category">
+          <div class="card">
+            <div class="thumb">
+              <img src="${img}" alt="${getText(item.name)}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="fallback" style="display:none">${getText(item.name)}</div>
+            </div>
+            <h3 class="name">${getText(item.name)}</h3>
+            <p class="desc">${getText(item.desc) || '&nbsp;'}</p>
+            ${isPizza ? `
+              <div class="sizes" data-size-group="${item.id}">
+                <button class="size-btn ${selected==='M'?'active':''}" data-size="M" data-id="${item.id}">M · ${formatPrice(item.prices.M)}</button>
+                <button class="size-btn ${selected==='L'?'active':''}" data-size="L" data-id="${item.id}">L · ${formatPrice(item.prices.L)}</button>
+                <button class="size-btn ${selected==='XL'?'active':''}" data-size="XL" data-id="${item.id}">XL · ${formatPrice(item.prices.XL)}</button>
+              </div>
+            ` : `<div class="price"><span class="single">${formatPrice(item.price)}</span></div>`}
+            <button class="add-btn" data-add-id="${item.id}">${i18n[state.lang].add}</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function bindCardEvents(){
+      document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.id;
+          const size = btn.dataset.size;
+          state.selectedSizes[id] = size;
+          saveState();
+          document.querySelectorAll(`.sizes[data-size-group="${id}"] .size-btn`).forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+      document.querySelectorAll('[data-add-id]').forEach(btn => btn.addEventListener('click', () => addToCart(btn.dataset.addId)));
+    }
+
+    function addToCart(id){
+      const item = findItem(id);
+      if(!item) return;
+      let name = getText(item.name);
+      let price = item.price || item.prices?.M || 0;
+      let size = null;
+      if(item.prices){
+        size = state.selectedSizes[item.id] || 'M';
+        price = item.prices[size];
+        name += ` (${size})`;
+      }
+      const key = `${id}__${size || 'SINGLE'}`;
+      if(!state.cart[key]) state.cart[key] = { id, name, price, qty: 0, size };
+      state.cart[key].qty += 1;
+      saveState();
+      renderCart();
+    }
+
+    function increase(key){ state.cart[key].qty += 1; saveState(); renderCart(); }
+    function decrease(key){ state.cart[key].qty -= 1; if(state.cart[key].qty <= 0) delete state.cart[key]; saveState(); renderCart(); }
+    function clearCart(){ state.cart = {}; saveState(); renderCart(); }
+
+    function renderCart(){
+      const entries = Object.entries(state.cart);
+      cartItems.innerHTML = '';
+      let total = 0;
+      let count = 0;
+      if(entries.length === 0){
+        cartItems.innerHTML = `<div class="empty">${i18n[state.lang].empty}</div>`;
+      } else {
+        entries.forEach(([key, item]) => {
+          total += item.price * item.qty;
+          count += item.qty;
+          const row = document.createElement('div');
+          row.className = 'cart-item';
+          row.innerHTML = `
+            <div>
+              <strong>${item.name}</strong>
+              <small>${formatPrice(item.price)} × ${item.qty}</small>
+            </div>
+            <div class="qty">
+              <button aria-label="${i18n[state.lang].removed}" data-dec="${key}">−</button>
+              <button aria-label="${i18n[state.lang].add}" data-inc="${key}">+</button>
+            </div>
+          `;
+          cartItems.appendChild(row);
+        });
+      }
+      cartTotal.textContent = formatPrice(total);
+      barTotal.textContent = formatPrice(total);
+      cartCount.textContent = count;
+      document.querySelectorAll('[data-dec]').forEach(btn => btn.addEventListener('click', () => decrease(btn.dataset.dec)));
+      document.querySelectorAll('[data-inc]').forEach(btn => btn.addEventListener('click', () => increase(btn.dataset.inc)));
+    }
+
+    function submitOrder(){
+      const items = Object.values(state.cart);
+      if(!items.length){ alert(i18n[state.lang].empty); return; }
+      const payload = { table: tableNum, lang: state.lang, items, total: items.reduce((s, i) => s + i.price * i.qty, 0), createdAt: new Date().toISOString() };
+      console.log('Order payload:', payload);
+      alert(i18n[state.lang].sent + '\n' + i18n[state.lang].table + ': ' + tableNum + '\n' + i18n[state.lang].total + ': ' + formatPrice(payload.total));
+      clearCart();
+    }
+
+    document.getElementById('langSelect').addEventListener('change', (e) => { state.lang = e.target.value; render(); });
+    searchInput.addEventListener('input', (e) => { state.query = e.target.value; render(); });
+    clearCartBtn.addEventListener('click', clearCart);
+    document.getElementById('cartBar').addEventListener('click', submitOrder);
+
+    products.forEach(cat => cat.items.forEach(item => { if(item.prices && !state.selectedSizes[item.id]) state.selectedSizes[item.id] = 'M'; }));
+    saveState();
+    render();
+  </script>
+</body>
+</html>
+const productImages = {
+  ege: "images/ege-pizza.jpg",
+  akdeniz: "images/akdeniz-pizza.jpg",
+  vejeteryan: "images/vejeteryan-pizza.jpg",
+  margarita: "images/margherita.jpg",
+  mantarli: "images/mantarli-pizza.jpg",
+  "kuru-domatesli": "images/pesto-pizza.jpg",
+  regina: "images/regina-pizza.jpg",
+
+  mix: "images/karisik-pizza.jpg",
+  meksikan: "images/meksikan-pizza.jpg",
+  sucuklu: "images/sucuklu-pizza.jpg",
+  sosisli: "images/sosisli-pizza.jpg",
+
+  special: "images/special-pizza.jpg",
+  ton: "images/ton-pizza.jpg",
+  tavuk: "images/tavuk-pizza.jpg",
+
+  "house-special": "images/house-special.jpg",
+
+  tb1: "images/tavuk-burger.jpg",
+  eb1: "images/hamburger.jpg",
+
+  ap7: "images/patates.jpg",
+
+  tat3: "images/kunefe.jpg",
+  tat4: "images/tiramisu.jpg"
+};
